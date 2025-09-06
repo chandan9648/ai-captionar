@@ -5,16 +5,16 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 async function registerController(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const isUserAlreadyExists = await userModel.findOne({ username });
+    const isUserAlreadyExists = await userModel.findOne({ email });
 
     if (isUserAlreadyExists) {
         return res.status(400).json({ message: "User already exists" });
     }
 
     const user = await userModel.create({
-        username,
+        email,
         password: await bcrypt.hash(password, 10)
     })
 
@@ -26,10 +26,10 @@ async function registerController(req, res) {
 }
 
 async function loginController(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     const user = await userModel.findOne({
-        username
+        email
     })
 
     if (!user) {
@@ -46,7 +46,7 @@ async function loginController(req, res) {
     res.status(200).json({
         message: "User logged in successfully",
         user: {
-            username: user.username,
+            email: user.email,
             id: user._id
         }
     })
@@ -54,5 +54,20 @@ async function loginController(req, res) {
 
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    meController: async function meController(req, res) {
+        // Protected via auth middleware in route definition
+        const user = req.user;
+        if (!user) return res.status(401).json({ message: "Not authenticated" });
+        res.json({
+            user: {
+                id: user._id,
+                email: user.email
+            }
+        })
+    },
+    logoutController: function logoutController(req, res) {
+        res.clearCookie('token');
+        res.json({ message: 'Logged out' });
+    }
 }
