@@ -3,7 +3,10 @@
 const userModel = require("../models/user.model")
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const e = require("express");
 
+
+//REGISTER CONTROLLER
 async function registerController(req, res) {
     const { email, password } = req.body;
 
@@ -18,13 +21,17 @@ async function registerController(req, res) {
         password: await bcrypt.hash(password, 10)
     })
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
 
     res.cookie("token", token)
 
     return res.status(201).json({ message: "User registered successfully", user });
 }
 
+
+//LOGIN CONTROLLER
 async function loginController(req, res) {
     const { email, password } = req.body;
 
@@ -41,7 +48,10 @@ async function loginController(req, res) {
     if (!isPasswordValid) {
         return res.status(400).json({ message: "Invalid password" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+
     res.cookie("token", token);
     res.status(200).json({
         message: "User logged in successfully",
@@ -66,6 +76,8 @@ module.exports = {
             }
         })
     },
+
+    // LOGOUT CONTROLLER
     logoutController: function logoutController(req, res) {
         res.clearCookie('token');
         res.json({ message: 'Logged out' });

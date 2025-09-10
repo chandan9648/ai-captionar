@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export default function Register() {
   const emailRef = useRef(null)
@@ -26,10 +27,13 @@ export default function Register() {
         body: JSON.stringify({ email, password })
       })
       const data = await res.json().catch(()=> ({}))
-      if (!res.ok) throw new Error(data?.message || 'Registration failed')
+      if (!res.ok) throw new Error(data?.message || 'Registration failed');
+      toast.success('Registered successfully');
       navigate('/login')
     } catch (err) {
       setError(err.message)
+      toast.error('Registration failed: ' + err.message);
+      
     } finally {
       setLoading(false)
     }

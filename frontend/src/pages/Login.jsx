@@ -1,7 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-export default function Login() {
+
+export default function Login({ onLogin }) {
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
   const [error, setError] = useState('')
@@ -27,9 +29,15 @@ export default function Login() {
       })
       const data = await res.json().catch(()=> ({}))
       if (!res.ok) throw new Error(data?.message || 'Login failed')
+      if (onLogin) {
+        onLogin({ token: data?.token, user: data?.userId })
+      }
+      
+      toast.success('Logged in successfully')
       navigate('/')
     } catch (err) {
       setError(err.message)
+      toast.error('Login failed: ' + err.message)
     } finally {
       setLoading(false)
     }
