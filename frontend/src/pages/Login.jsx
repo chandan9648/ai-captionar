@@ -39,7 +39,7 @@ export default function Login({ onLogin }) {
       setError(err.message)
       toast.error('Login failed: ' + err.message)
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
