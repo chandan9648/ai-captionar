@@ -24,6 +24,7 @@ async function generateCaption(base64ImageFile) {
             You generate single caption for the image.
             Your caption should be short and concise.
             You use hashtags and emojis in the caption.
+            Generate the caption in more than 20 words.
             `
         }
     });
