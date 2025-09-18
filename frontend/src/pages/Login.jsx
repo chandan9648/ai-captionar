@@ -29,9 +29,7 @@ export default function Login({ onLogin }) {
       })
       const data = await res.json().catch(()=> ({}))
       if (!res.ok) throw new Error(data?.message || 'Login failed')
-      if (onLogin) {
-        onLogin({ token: data?.token, user: data?.userId })
-      }
+      if (onLogin) onLogin()
       
       toast.success('Logged in successfully')
       navigate('/')
@@ -57,7 +55,7 @@ export default function Login({ onLogin }) {
           <input ref={passwordRef} type="password" className="w-full border rounded-lg px-3 py-2" placeholder="••••••••" />
         </div>
         {error && <div className="text-rose-600 text-sm">{error}</div>}
-        <button disabled={loading} className="w-full bg-violet-600 text-white py-2 rounded-md disabled:opacity-60">
+        <button disabled={loading} className="w-full bg-violet-600 text-white py-2 rounded-md disabled:opacity-60 cursor-pointer">
           {loading ? 'Logging in...' : 'Login'}
         </button>
         <p className="text-sm text-center text-slate-600">No account? <Link className="text-violet-600 hover:underline" to="/register">Register</Link></p>

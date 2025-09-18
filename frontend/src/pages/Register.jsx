@@ -53,7 +53,7 @@ export default function Register() {
           <input ref={passwordRef} type="password" className="w-full border rounded-lg px-3 py-2" placeholder="••••••••" />
         </div>
         {error && <div className="text-rose-600 text-sm">{error}</div>}
-        <button disabled={loading} className="w-full bg-violet-600 text-white py-2 rounded-md disabled:opacity-60">
+        <button disabled={loading} className="w-full bg-violet-600 text-white py-2 rounded-md disabled:opacity-60 cursor-pointer">
           {loading ? 'Creating...' : 'Register'}
         </button>
         <p className="text-sm text-center text-slate-600">Already have an account? <Link className="text-violet-600 hover:underline" to="/login">Login</Link></p>
