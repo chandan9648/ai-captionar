@@ -3,8 +3,6 @@ const authRoutes = require('./routes/auth.routes');
 const postRoutes = require("./routes/post.routes");
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
-dotenv.config();
 
 
 const app = express()
