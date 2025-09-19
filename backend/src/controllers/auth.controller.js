@@ -3,7 +3,7 @@
 const userModel = require("../models/user.model")
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const e = require("express");
+
 
 
 //REGISTER CONTROLLER
