@@ -15,7 +15,7 @@ export function AuthModal({ isOpen, onClose, authMode, setAuthMode, onSuccess, s
       return
     }
     try {
-      const res = await fetch(`https://ai-captionar.onrender.com/api/auth/${authMode}`, {
+      const res = await fetch(`/api/auth/${authMode}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
