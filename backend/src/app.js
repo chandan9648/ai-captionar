@@ -9,7 +9,7 @@ const app = express()
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-    origin: 'https://ai-captionar.vercel.app', // frontend URL
+    origin: 'https://reliable-caramel-e9abb5.netlify.app', // frontend URL
     credentials: true, // allow cookies to be sent
 }));
 
