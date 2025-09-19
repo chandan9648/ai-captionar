@@ -53,7 +53,7 @@ function Home() {
       // style currently not used by backend, but we include for future
       form.append("style", style);
 
-      const res = await fetch("/api/posts", {
+      const res = await fetch("https://ai-captionar.onrender.com/api/posts", {
         method: "POST",
         body: form,
         credentials: "include",
