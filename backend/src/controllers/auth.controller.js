@@ -25,7 +25,14 @@ async function registerController(req, res) {
         { expiresIn: '1h' }
     );
 
-    res.cookie("token", token)
+    const isProd = process.env.NODE_ENV === 'production';
+    const cookieOptions = {
+        httpOnly: true,
+        sameSite: isProd ? 'None' : 'Lax',
+        secure: isProd,
+        maxAge: 60 * 60 * 1000
+    };
+    res.cookie("token", token, cookieOptions)
 
     return res.status(201).json({ message: "User registered successfully", user });
 }
@@ -52,7 +59,14 @@ async function loginController(req, res) {
         { expiresIn: '1h' }
     );
 
-    res.cookie("token", token);
+    const isProd = process.env.NODE_ENV === 'production';
+    const cookieOptions = {
+        httpOnly: true,
+        sameSite: isProd ? 'None' : 'Lax',
+        secure: isProd,
+        maxAge: 60 * 60 * 1000
+    };
+    res.cookie("token", token, cookieOptions);
     res.status(200).json({
         message: "User logged in successfully",
         user: {
