@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../config'
+const api = (path) => (API_BASE_URL ? `${API_BASE_URL}${path}` : path)
 import { toast } from 'react-toastify'
 
 export default function Register() {
@@ -20,7 +22,7 @@ export default function Register() {
     }
     setLoading(true)
     try {
-      const res = await fetch('https://ai-captionar.onrender.com/api/auth/register', {
+  const res = await fetch(api('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { UploadCard } from "../components/UploadCard";
 import { CaptionCard } from "../components/CaptionCard";
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
+const api = (path) => (API_BASE_URL ? `${API_BASE_URL}${path}` : path)
 
 
 const styles = [
@@ -53,11 +55,24 @@ function Home() {
       // style currently not used by backend, but we include for future
       form.append("style", style);
 
-      const res = await fetch("https://ai-captionar.onrender.com/api/posts", {
+      const attempt = async () => fetch(api('/api/posts'), {
         method: "POST",
         body: form,
         credentials: "include",
       });
+      let res = await attempt();
+      // Basic retry on 429 up to 2 times
+      let tries = 0;
+      while (res.status === 429 && tries < 2) {
+        let waitMs = 3000;
+        try {
+          const tmp = await res.clone().json();
+          if (tmp?.retryAfterMs) waitMs = Number(tmp.retryAfterMs) || waitMs;
+  } catch { /* ignore parse */ }
+        await new Promise(r => setTimeout(r, waitMs));
+        tries++;
+        res = await attempt();
+      }
 
       if (res.status === 401) {
         navigate('/login');
@@ -65,7 +80,12 @@ function Home() {
       }
 
       if (!res.ok) {
-        const text = await res.text();
+        if (res.status === 429) {
+          throw new Error("Too many requests. Please try again shortly.");
+        }
+        let text = await res.text();
+        // In case backend returned JSON error
+  try { const j = JSON.parse(text); text = j?.message || text; } catch { /* not json */ }
         throw new Error(text || "Failed to generate caption");
       }
       const data = await res.json();

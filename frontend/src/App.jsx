@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { API_BASE_URL } from './config';
+const api = (path) => (API_BASE_URL ? `${API_BASE_URL}${path}` : path);
 // import { set } from "../../backend/src/app";
 
 export default function App() {
@@ -15,7 +17,7 @@ export default function App() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch('/api/auth/me', { credentials: 'include' });
+  const res = await fetch(api('/api/auth/me'), { credentials: 'include' });
         if (!cancelled) setIsLoggedIn(res.ok);
       } catch {
         if (!cancelled) setIsLoggedIn(false);
@@ -29,7 +31,7 @@ export default function App() {
   };
 
   const handleLogout = async () => {
-    try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch { /* ignore */ }
+  try { await fetch(api('/api/auth/logout'), { method: 'POST', credentials: 'include' }); } catch { /* ignore */ }
     setIsLoggedIn(false);
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
